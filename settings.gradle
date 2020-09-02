@@ -30,3 +30,4 @@ project(modulePrefix + 'demo-surface').projectDir = new File(rootDir, 'demos/sur
 project(modulePrefix + 'playbacktests').projectDir = new File(rootDir, 'playbacktests')
 
 apply from: 'core_settings.gradle'
+include ':extension-VOLog'

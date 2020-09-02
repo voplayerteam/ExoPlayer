@@ -56,6 +56,7 @@ import com.google.android.exoplayer2.util.MimeTypes;
 import com.google.android.exoplayer2.util.TraceUtil;
 import com.google.android.exoplayer2.util.Util;
 import com.google.android.exoplayer2.video.VideoRendererEventListener.EventDispatcher;
+import com.viaccessorca.extension_volog.VOLog;
 import java.nio.ByteBuffer;
 import java.util.Collections;
 import java.util.List;
@@ -686,6 +687,7 @@ public class MediaCodecVideoRenderer extends MediaCodecRenderer {
       }
       surface = dummySurface;
     }
+    VOLog.printDebug("codec.configure: "+mediaFormat.toString());
     codec.configure(mediaFormat, surface, crypto, 0);
     if (Util.SDK_INT >= 23 && tunneling) {
       tunnelingOnFrameRenderedListener = new OnFrameRenderedListenerV23(codec);
@@ -1337,16 +1339,25 @@ public class MediaCodecVideoRenderer extends MediaCodecRenderer {
       boolean deviceNeedsNoPostProcessWorkaround,
       int tunnelingAudioSessionId) {
     MediaFormat mediaFormat = new MediaFormat();
+    VOLog.printDebug("enter in getMediaFormat");
     // Set format parameters that should always be set.
     mediaFormat.setString(MediaFormat.KEY_MIME, codecMimeType);
+    VOLog.printDebug("KEY_MIME: "+codecMimeType);
     mediaFormat.setInteger(MediaFormat.KEY_WIDTH, format.width);
+    VOLog.printDebug("KEY_WIDTH: "+format.width);
     mediaFormat.setInteger(MediaFormat.KEY_HEIGHT, format.height);
+    VOLog.printDebug("KEY_HEIGHT: "+format.height);
     MediaFormatUtil.setCsdBuffers(mediaFormat, format.initializationData);
+    VOLog.printDebug("setCsdBuffers: "+format.initializationData);
     // Set format parameters that may be unset.
     MediaFormatUtil.maybeSetFloat(mediaFormat, MediaFormat.KEY_FRAME_RATE, format.frameRate);
+    VOLog.printDebug("KEY_FRAME_RATE: "+format.frameRate);
     MediaFormatUtil.maybeSetInteger(mediaFormat, MediaFormat.KEY_ROTATION, format.rotationDegrees);
+    VOLog.printDebug("KEY_ROTATION: "+format.rotationDegrees);
     MediaFormatUtil.maybeSetColorInfo(mediaFormat, format.colorInfo);
+    VOLog.printDebug("maybeSetColorInfo: "+format.colorInfo);
     if (MimeTypes.VIDEO_DOLBY_VISION.equals(format.sampleMimeType)) {
+      VOLog.printDebug("is VIDEO_DOLBY_VISION");
       // Some phones require the profile to be set on the codec.
       // See https://github.com/google/ExoPlayer/pull/5438.
       Pair<Integer, Integer> codecProfileAndLevel = MediaCodecUtil.getCodecProfileAndLevel(format);
@@ -1357,14 +1368,18 @@ public class MediaCodecVideoRenderer extends MediaCodecRenderer {
     }
     // Set codec max values.
     mediaFormat.setInteger(MediaFormat.KEY_MAX_WIDTH, codecMaxValues.width);
+    VOLog.printDebug("MediaFormat.KEY_MAX_WIDTH "+MediaFormat.KEY_MAX_WIDTH);
     mediaFormat.setInteger(MediaFormat.KEY_MAX_HEIGHT, codecMaxValues.height);
+    VOLog.printDebug("MediaFormat.KEY_MAX_HEIGHT "+MediaFormat.KEY_MAX_HEIGHT);
     MediaFormatUtil.maybeSetInteger(
         mediaFormat, MediaFormat.KEY_MAX_INPUT_SIZE, codecMaxValues.inputSize);
+    VOLog.printDebug("MediaFormat.KEY_MAX_INPUT_SIZE "+MediaFormat.KEY_MAX_INPUT_SIZE);
     // Set codec configuration values.
     if (Util.SDK_INT >= 23) {
       mediaFormat.setInteger(MediaFormat.KEY_PRIORITY, 0 /* realtime priority */);
       if (codecOperatingRate != CODEC_OPERATING_RATE_UNSET) {
         mediaFormat.setFloat(MediaFormat.KEY_OPERATING_RATE, codecOperatingRate);
+        VOLog.printDebug("MediaFormat.KEY_OPERATING_RATE "+MediaFormat.KEY_OPERATING_RATE);
       }
     }
     if (deviceNeedsNoPostProcessWorkaround) {
@@ -1372,6 +1387,7 @@ public class MediaCodecVideoRenderer extends MediaCodecRenderer {
       mediaFormat.setInteger("auto-frc", 0);
     }
     if (tunnelingAudioSessionId != C.AUDIO_SESSION_ID_UNSET) {
+      VOLog.printDebug("set AUDIO_SESSION_ID_UNSET not set");
       configureTunnelingV21(mediaFormat, tunnelingAudioSessionId);
     }
     return mediaFormat;

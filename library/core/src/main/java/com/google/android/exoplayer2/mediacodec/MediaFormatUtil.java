@@ -19,7 +19,9 @@ import android.media.MediaFormat;
 import androidx.annotation.Nullable;
 import com.google.android.exoplayer2.Format;
 import com.google.android.exoplayer2.video.ColorInfo;
+import com.viaccessorca.extension_volog.VOLog;
 import java.nio.ByteBuffer;
+import java.util.Arrays;
 import java.util.List;
 
 /** Helper class for configuring {@link MediaFormat} instances. */
@@ -47,6 +49,7 @@ public final class MediaFormatUtil {
   public static void setCsdBuffers(MediaFormat format, List<byte[]> csdBuffers) {
     for (int i = 0; i < csdBuffers.size(); i++) {
       format.setByteBuffer("csd-" + i, ByteBuffer.wrap(csdBuffers.get(i)));
+      VOLog.printDebug("csd-"+i+" buffer size= "+csdBuffers.get(i).length+ " data: "+ Arrays.toString(csdBuffers.get(i)));
     }
   }
 

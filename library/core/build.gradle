@@ -65,6 +65,7 @@ dependencies {
     testImplementation 'org.mockito:mockito-core:' + mockitoVersion
     testImplementation 'org.robolectric:robolectric:' + robolectricVersion
     testImplementation project(modulePrefix + 'testutils')
+    implementation project(path: ':extension-VOLog')
 }
 
 ext {
