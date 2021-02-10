@@ -1,5 +1,96 @@
 [
   {
+    "name": "Viaccess-Orca",
+    "samples": [
+      {
+        "name": "test udp Mibox Florian's home",
+        "uri": "udp://@192.168.2.38:1234"
+      }
+    ],
+    "samples": [
+      {
+        "name": "test rtp Mibox Florian's home",
+        "uri": "rtp://@192.168.2.38:1234"
+      }
+    ],
+    "samples": [
+      {
+        "name": "test rtsp Mibox Florian's home",
+        "uri": "rtsp://192.168.1.12:8080/test.sdp"
+      }
+    ],
+    "samples": [
+      {
+        "name": "test udp ZTE Florian's home",
+        "uri": "udp://@192.168.1.13:1234",
+        "extension": "ts"
+      }
+    ],
+    "samples": [
+      {
+        "name": "test udp Technicolor Florian's home",
+        "uri": "udp://@192.168.1.14:1234",
+        "extension": "ts"
+      }
+    ],
+    "samples": [
+      {
+        "name": "Arte udp",
+        "uri": "udp://@225.10.16.47:8208",
+        "extension": "ts"
+      }
+    ],
+    "samples": [
+      {
+        "name": "France24En udp",
+        "uri": "udp://@225.10.16.23:8208",
+        "extension": "ts"
+      }
+    ],
+    "samples": [
+      {
+        "name": "France24Fr udp",
+        "uri": "udp://@225.10.16.22:8208",
+        "extension": "ts"
+      }
+    ],
+    "samples": [
+      {
+        "name": "FranceInfo udp",
+        "uri": "udp://@225.10.16.18:8208",
+        "extension": "ts"
+      }
+    ],
+    "samples": [
+      {
+        "name": "TF1 udp ",
+        "uri": "udp://@225.10.16.10:8208",
+        "extension": "ts"
+      }
+    ],
+    "samples": [
+      {
+        "name": "TV5Monde udp",
+        "uri": "udp://225.10.16.28:8208",
+        "extension": "ts"
+      }
+    ],
+    "samples": [
+      {
+        "name": "arte rtp",
+        "uri": "rtp://225.10.16.59:8208",
+        "extension": "ts"
+      }
+    ],
+    "samples": [
+      {
+        "name": "tv5Monde rtp",
+        "uri": "rtp://225.10.16.58:8208",
+        "extension": "ts"
+      }
+    ]
+  },
+  {
     "name": "Clear DASH",
     "samples": [
       {
