@@ -18,13 +18,24 @@ package com.google.android.exoplayer2.testutil;
 import android.os.Handler.Callback;
 import android.os.Looper;
 import android.os.Message;
+import android.os.SystemClock;
 import androidx.annotation.GuardedBy;
+import androidx.annotation.Nullable;
 import com.google.android.exoplayer2.util.Clock;
 import com.google.android.exoplayer2.util.HandlerWrapper;
 import java.util.ArrayList;
 import java.util.List;
 
-/** Fake {@link Clock} implementation independent of {@link android.os.SystemClock}. */
+/**
+ * Fake {@link Clock} implementation that allows to {@link #advanceTime(long) advance the time}
+ * manually to trigger pending timed messages.
+ *
+ * <p>All timed messages sent by a {@link #createHandler(Looper, Callback) Handler} created from
+ * this clock are governed by the clock's time.
+ *
+ * <p>The clock also sets the time of the {@link SystemClock} to match the {@link #elapsedRealtime()
+ * clock's time}.
+ */
 public class FakeClock implements Clock {
 
   private final List<Long> wakeUpTimes;
@@ -56,6 +67,7 @@ public class FakeClock implements Clock {
     this.timeSinceBootMs = initialTimeMs;
     this.wakeUpTimes = new ArrayList<>();
     this.handlerMessages = new ArrayList<>();
+    SystemClock.setCurrentTimeMillis(initialTimeMs);
   }
 
   /**
@@ -65,6 +77,7 @@ public class FakeClock implements Clock {
    */
   public synchronized void advanceTime(long timeDiffMs) {
     timeSinceBootMs += timeDiffMs;
+    SystemClock.setCurrentTimeMillis(timeSinceBootMs);
     for (Long wakeUpTime : wakeUpTimes) {
       if (wakeUpTime <= timeSinceBootMs) {
         notifyAll();
@@ -111,7 +124,7 @@ public class FakeClock implements Clock {
   }
 
   @Override
-  public HandlerWrapper createHandler(Looper looper, Callback callback) {
+  public HandlerWrapper createHandler(Looper looper, @Nullable Callback callback) {
     return new ClockHandler(looper, callback);
   }
 
@@ -135,12 +148,22 @@ public class FakeClock implements Clock {
     return true;
   }
 
+  private synchronized boolean hasPendingMessage(ClockHandler handler, int what) {
+    for (int i = 0; i < handlerMessages.size(); i++) {
+      HandlerMessageData message = handlerMessages.get(i);
+      if (message.handler.equals(handler) && message.message == what) {
+        return true;
+      }
+    }
+    return handler.handler.hasMessages(what);
+  }
+
   /** Message data saved to send messages or execute runnables at a later time on a Handler. */
   private static final class HandlerMessageData {
 
     private final long postTime;
     private final HandlerWrapper handler;
-    private final Runnable runnable;
+    @Nullable private final Runnable runnable;
     private final int message;
 
     public HandlerMessageData(long postTime, HandlerWrapper handler, Runnable runnable) {
@@ -176,7 +199,7 @@ public class FakeClock implements Clock {
 
     private final android.os.Handler handler;
 
-    public ClockHandler(Looper looper, Callback callback) {
+    public ClockHandler(Looper looper, @Nullable Callback callback) {
       handler = new android.os.Handler(looper, callback);
     }
 
@@ -186,12 +209,17 @@ public class FakeClock implements Clock {
     }
 
     @Override
+    public boolean hasMessages(int what) {
+      return hasPendingMessage(/* handler= */ this, what);
+    }
+
+    @Override
     public Message obtainMessage(int what) {
       return handler.obtainMessage(what);
     }
 
     @Override
-    public Message obtainMessage(int what, Object obj) {
+    public Message obtainMessage(int what, @Nullable Object obj) {
       return handler.obtainMessage(what, obj);
     }
 
@@ -201,13 +229,18 @@ public class FakeClock implements Clock {
     }
 
     @Override
-    public Message obtainMessage(int what, int arg1, int arg2, Object obj) {
+    public Message obtainMessage(int what, int arg1, int arg2, @Nullable Object obj) {
       return handler.obtainMessage(what, arg1, arg2, obj);
     }
 
     @Override
     public boolean sendEmptyMessage(int what) {
       return handler.sendEmptyMessage(what);
+    }
+
+    @Override
+    public boolean sendEmptyMessageDelayed(int what, int delayMs) {
+      return addHandlerMessageAtTime(this, what, uptimeMillis() + delayMs);
     }
 
     @Override
@@ -221,7 +254,7 @@ public class FakeClock implements Clock {
     }
 
     @Override
-    public void removeCallbacksAndMessages(Object token) {
+    public void removeCallbacksAndMessages(@Nullable Object token) {
       handler.removeCallbacksAndMessages(token);
     }
 

@@ -15,9 +15,12 @@
  */
 package com.google.android.exoplayer2.text.ssa;
 
+import static com.google.android.exoplayer2.text.Cue.LINE_TYPE_FRACTION;
 import static com.google.android.exoplayer2.util.Util.castNonNull;
 
 import android.text.Layout;
+import android.text.SpannableString;
+import android.text.style.ForegroundColorSpan;
 import androidx.annotation.Nullable;
 import com.google.android.exoplayer2.C;
 import com.google.android.exoplayer2.text.Cue;
@@ -139,7 +142,7 @@ public final class SsaDecoder extends SimpleSubtitleDecoder {
    * starts with {@code [} (i.e. the title of the next section).
    *
    * @param data A {@link ParsableByteArray} with {@link ParsableByteArray#getPosition() position}
-   *     set to the beginning of of the first line after {@code [Script Info]}.
+   *     set to the beginning of the first line after {@code [Script Info]}.
    */
   private void parseScriptInfo(ParsableByteArray data) {
     @Nullable String currentLine;
@@ -175,7 +178,7 @@ public final class SsaDecoder extends SimpleSubtitleDecoder {
    * starts with {@code [} (i.e. the title of the next section).
    *
    * @param data A {@link ParsableByteArray} with {@link ParsableByteArray#getPosition()} pointing
-   *     at the beginning of of the first line after {@code [V4+ Styles]}.
+   *     at the beginning of the first line after {@code [V4+ Styles]}.
    */
   private static Map<String, SsaStyle> parseStyles(ParsableByteArray data) {
     Map<String, SsaStyle> styles = new LinkedHashMap<>();
@@ -262,8 +265,9 @@ public final class SsaDecoder extends SimpleSubtitleDecoder {
     SsaStyle.Overrides styleOverrides = SsaStyle.Overrides.parseFromDialogue(rawText);
     String text =
         SsaStyle.Overrides.stripStyleOverrides(rawText)
-            .replaceAll("\\\\N", "\n")
-            .replaceAll("\\\\n", "\n");
+            .replace("\\N", "\n")
+            .replace("\\n", "\n")
+            .replace("\\h", "\u00A0");
     Cue cue = createCue(text, style, styleOverrides, screenWidth, screenHeight);
 
     int startTimeIndex = addCuePlacerholderByTime(startTimeUs, cueTimesUs, cues);
@@ -299,6 +303,19 @@ public final class SsaDecoder extends SimpleSubtitleDecoder {
       SsaStyle.Overrides styleOverrides,
       float screenWidth,
       float screenHeight) {
+    SpannableString spannableText = new SpannableString(text);
+    Cue.Builder cue = new Cue.Builder().setText(spannableText);
+
+    if (style != null) {
+      if (style.primaryColor != null) {
+        spannableText.setSpan(
+            new ForegroundColorSpan(style.primaryColor),
+            /* start= */ 0,
+            /* end= */ spannableText.length(),
+            SpannableString.SPAN_EXCLUSIVE_EXCLUSIVE);
+      }
+    }
+
     @SsaStyle.SsaAlignment int alignment;
     if (styleOverrides.alignment != SsaStyle.SSA_ALIGNMENT_UNKNOWN) {
       alignment = styleOverrides.alignment;
@@ -307,31 +324,22 @@ public final class SsaDecoder extends SimpleSubtitleDecoder {
     } else {
       alignment = SsaStyle.SSA_ALIGNMENT_UNKNOWN;
     }
-    @Cue.AnchorType int positionAnchor = toPositionAnchor(alignment);
-    @Cue.AnchorType int lineAnchor = toLineAnchor(alignment);
+    cue.setTextAlignment(toTextAlignment(alignment))
+        .setPositionAnchor(toPositionAnchor(alignment))
+        .setLineAnchor(toLineAnchor(alignment));
 
-    float position;
-    float line;
     if (styleOverrides.position != null
         && screenHeight != Cue.DIMEN_UNSET
         && screenWidth != Cue.DIMEN_UNSET) {
-      position = styleOverrides.position.x / screenWidth;
-      line = styleOverrides.position.y / screenHeight;
+      cue.setPosition(styleOverrides.position.x / screenWidth);
+      cue.setLine(styleOverrides.position.y / screenHeight, LINE_TYPE_FRACTION);
     } else {
       // TODO: Read the MarginL, MarginR and MarginV values from the Style & Dialogue lines.
-      position = computeDefaultLineOrPosition(positionAnchor);
-      line = computeDefaultLineOrPosition(lineAnchor);
+      cue.setPosition(computeDefaultLineOrPosition(cue.getPositionAnchor()));
+      cue.setLine(computeDefaultLineOrPosition(cue.getLineAnchor()), LINE_TYPE_FRACTION);
     }
 
-    return new Cue(
-        text,
-        toTextAlignment(alignment),
-        line,
-        Cue.LINE_TYPE_FRACTION,
-        lineAnchor,
-        position,
-        positionAnchor,
-        /* size= */ Cue.DIMEN_UNSET);
+    return cue.build();
   }
 
   @Nullable
