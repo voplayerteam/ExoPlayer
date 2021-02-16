@@ -433,6 +433,7 @@ public final class Loader implements LoaderErrorThrower {
         // This should never happen, but handle it anyway.
         Log.e(TAG, "Unexpected exception loading stream", e);
         if (!released) {
+          //TODO: Handle the exception to call onLoadError() in RtspSampleStreamWrapper.java
           obtainMessage(MSG_IO_EXCEPTION, new UnexpectedLoaderException(e)).sendToTarget();
         }
       } catch (OutOfMemoryError e) {
@@ -457,6 +458,7 @@ public final class Loader implements LoaderErrorThrower {
 
     @Override
     public void handleMessage(Message msg) {
+      //TODO: why not called after UDP timeout error raises ?
       if (released) {
         return;
       }

@@ -593,6 +593,8 @@ public final class RtspSampleStreamWrapper implements
     public Loader.LoadErrorAction onLoadError(MediaStreamLoadable loadable, long elapsedRealtimeMs,
                                               final long loadDurationMs, final IOException error,
                                               int errorCount) {
+
+        //TODO: make sure to called this method to call onMediaStreamPlaybackFailure() where TCP will be tried instead of UDP
         loadingFinished = true;
 
         handler.post(new Runnable() {

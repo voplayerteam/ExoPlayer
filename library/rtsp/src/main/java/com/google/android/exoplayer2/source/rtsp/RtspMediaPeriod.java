@@ -408,7 +408,8 @@ import static com.google.android.exoplayer2.C.DATA_TYPE_MEDIA_INITIALIZATION;
                 eventDispatcher.loadError(null,
                         DATA_TYPE_MEDIA, 0, null, 0, null, 0, 0, null, false);
 
-                // if UDP timeout, retrying with TCP
+                // TODO: should go there to make it play
+                //  if UDP timeout, retrying with TCP
                 if (RtspSampleStreamWrapper.NO_DATA_RECEIVED == error && !session.isInterleaved()) {
                     new Handler(Looper.getMainLooper()).post(new Runnable() {
                         @Override
