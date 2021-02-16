@@ -390,6 +390,16 @@ public final class ExtractorMediaSource extends CompositeMediaSource<Void> {
     }
 
     @Override
+    public void onMediaPeriodCreated(int windowIndex, MediaPeriodId mediaPeriodId) {
+
+    }
+
+    @Override
+    public void onMediaPeriodReleased(int windowIndex, MediaPeriodId mediaPeriodId) {
+
+    }
+
+    @Override
     public void onLoadError(
         int windowIndex,
         @Nullable MediaPeriodId mediaPeriodId,

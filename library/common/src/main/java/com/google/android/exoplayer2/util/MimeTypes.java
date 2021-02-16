@@ -46,6 +46,7 @@ public final class MimeTypes {
   public static final String VIDEO_AV1 = BASE_TYPE_VIDEO + "/av01";
   public static final String VIDEO_MP2T = BASE_TYPE_VIDEO + "/mp2t";
   public static final String VIDEO_MP4V = BASE_TYPE_VIDEO + "/mp4v-es";
+  public static final String VIDEO_MJPEG = BASE_TYPE_VIDEO + "/mjpeg";
   public static final String VIDEO_MPEG = BASE_TYPE_VIDEO + "/mpeg";
   public static final String VIDEO_PS = BASE_TYPE_VIDEO + "/mp2p";
   public static final String VIDEO_MPEG2 = BASE_TYPE_VIDEO + "/mpeg2";
@@ -58,6 +59,7 @@ public final class MimeTypes {
 
   public static final String AUDIO_MP4 = BASE_TYPE_AUDIO + "/mp4";
   public static final String AUDIO_AAC = BASE_TYPE_AUDIO + "/mp4a-latm";
+  public static final String AUDIO_L16 = BASE_TYPE_AUDIO + "/l16";
   public static final String AUDIO_MATROSKA = BASE_TYPE_AUDIO + "/x-matroska";
   public static final String AUDIO_WEBM = BASE_TYPE_AUDIO + "/webm";
   public static final String AUDIO_MPEG = BASE_TYPE_AUDIO + "/mpeg";

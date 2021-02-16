@@ -57,6 +57,11 @@ public final class C {
   public static final int INDEX_UNSET = -1;
 
   /**
+   * Represents an unset or unknown port.
+   */
+  public static final int PORT_UNSET = -1;
+
+  /**
    * Represents an unset or unknown position.
    */
   public static final int POSITION_UNSET = -1;
@@ -624,6 +629,33 @@ public final class C {
    * Smooth Streaming manifests.
    */
   public static final int TYPE_OTHER = 3;
+
+  /**
+   * Value returned by {@link Util#inferContentType(String)} for RTSP files.
+   */
+  public static final int TYPE_RTSP = 4;
+
+  /**
+   * Transport protocol. One of {@link #TCP}, {@link #UDP}.
+   */
+  @Documented
+  @Retention(RetentionPolicy.SOURCE)
+  @IntDef({
+      TCP,
+      UDP
+  })
+  public @interface TransportProtocol {}
+
+  /**
+   * Indicates TCP transport protocol.
+   */
+  public static final int TCP = 0;
+
+  /**
+   * Indicates UDP transport protocol.
+   */
+  public static final int UDP = 1;
+
 
   /**
    * A return value for methods where the end of an input was encountered.

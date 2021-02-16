@@ -3,32 +3,32 @@
     "name": "Viaccess-Orca",
     "samples": [
       {
-        "name": "test udp Mibox Florian's home",
+        "name": "test udp Mibox FL's home",
         "uri": "udp://@192.168.2.38:1234"
       }
     ],
     "samples": [
       {
-        "name": "test rtp Mibox Florian's home",
+        "name": "test rtp Mibox FL's home",
         "uri": "rtp://@192.168.2.38:1234"
       }
     ],
     "samples": [
       {
-        "name": "test rtsp Mibox Florian's home",
+        "name": "test rtsp Mibox FL's home",
         "uri": "rtsp://192.168.1.12:8080/test.sdp"
       }
     ],
     "samples": [
       {
-        "name": "test udp ZTE Florian's home",
+        "name": "test udp ZTE FL's home",
         "uri": "udp://@192.168.1.13:1234",
         "extension": "ts"
       }
     ],
     "samples": [
       {
-        "name": "test udp Technicolor Florian's home",
+        "name": "test udp Technicolor FL's home",
         "uri": "udp://@192.168.1.14:1234",
         "extension": "ts"
       }
@@ -87,6 +87,43 @@
         "name": "tv5Monde rtp",
         "uri": "rtp://225.10.16.58:8208",
         "extension": "ts"
+      }
+    ]
+  },
+  {
+    "name": "RTSP Public Streams",
+    "samples": [
+      {
+        "name": "CCTV United States - Cam 2   - Mux A/V",
+        "uri": "rtsp://207.224.178.221/live/ch00_0"
+      },
+      {
+        "name": "Test camera    - Mux A/V",
+        "uri": "rtsp://31.0.225.93/cam/realmonitor?channel=3&subtype=00&authbasic=YWRtaW46MTIzOTg3"
+      },
+      {
+        "name": "AXIS P7214 - Germany   - Mux A/V",
+        "uri": "rtsp://root:pass@80.84.207.150/axis-media/media.amp"
+      },
+      {
+        "name": "Wowza Amazon EC2 - Big Buck Bunny Comedy Film   - Mux A/V",
+        "uri": "rtsp://wowzaec2demo.streamlock.net/vod/mp4:BigBuckBunny_175k.mov"
+      },
+      {
+        "name": "University British Columbia Tim Hortons Camera   - Mux A/V",
+        "uri": "rtsp://streamserve.ok.ubc.ca:1935/timcam/timcam.stream"
+      },
+      {
+        "name": "Live stream TV from Bulgaria - Balkanika MTV   - 1 A & 1 V",
+        "uri": "rtsp://stream.teracomm.bg/balkanika"
+      },
+      {
+        "name": "Live stream TV from Bulgaria - Planeta TV   - 1 A & 1 V",
+        "uri": "rtsp://stream.teracomm.bg/planeta"
+      },
+      {
+        "name": "Live stream TV from Bulgaria - FEN TV   - 1 A & 1 V",
+        "uri": "rtsp://stream.teracomm.bg/fen"
       }
     ]
   },

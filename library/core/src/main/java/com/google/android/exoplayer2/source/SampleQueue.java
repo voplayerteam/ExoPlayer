@@ -99,6 +99,35 @@ public class SampleQueue implements TrackOutput {
   private long sampleOffsetUs;
   private boolean pendingSplice;
 
+  public static final int ADVANCE_FAILED = -1;
+
+
+  /**
+   * Advances the read position to the end of the queue.
+   *
+   * @return The number of samples that were skipped.
+   */
+  public int advanceToEnd() {
+    return sampleDataQueue.advanceToEnd();
+  }
+
+  /**
+   * Attempts to advance the read position to the sample before or at the specified time.
+   *
+   * @param timeUs The time to advance to.
+   * @param toKeyframe If true then attempts to advance to the keyframe before or at the specified
+   *     time, rather than to any sample before or at that time.
+   * @param allowTimeBeyondBuffer Whether the operation can succeed if {@code timeUs} is beyond the
+   *     end of the queue, by advancing the read position to the last sample (or keyframe).
+   * @return The number of samples that were skipped if the operation was successful, which may be
+   *     equal to 0, or {@link #ADVANCE_FAILED} if the operation was not successful. A successful
+   *     advance is one in which the read position was unchanged or advanced, and is now at a sample
+   *     meeting the specified criteria.
+   */
+  public int advanceTo(long timeUs, boolean toKeyframe, boolean allowTimeBeyondBuffer) {
+    return sampleDataQueue.advanceTo(timeUs, toKeyframe, allowTimeBeyondBuffer);
+  }
+
   /**
    * Creates a sample queue without DRM resource management.
    *
@@ -220,7 +249,9 @@ public class SampleQueue implements TrackOutput {
    * @param sourceId The source identifier.
    */
   public final void sourceId(int sourceId) {
+
     upstreamSourceId = sourceId;
+
   }
 
   /** Indicates samples that are subsequently queued should be spliced into those already queued. */
@@ -659,7 +690,7 @@ public class SampleQueue implements TrackOutput {
   // Internal methods.
 
   /** Rewinds the read position to the first sample in the queue. */
-  private synchronized void rewind() {
+  public synchronized void rewind() {
     readPosition = 0;
     sampleDataQueue.rewind();
   }
@@ -863,7 +894,7 @@ public class SampleQueue implements TrackOutput {
     return 0;
   }
 
-  private boolean hasNextSample() {
+  public boolean hasNextSample() {
     return readPosition != length;
   }
 

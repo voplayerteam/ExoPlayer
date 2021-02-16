@@ -27,9 +27,20 @@ import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.MulticastSocket;
 import java.net.SocketException;
+import java.net.SocketTimeoutException;
 
 /** A UDP {@link DataSource}. */
-public final class UdpDataSource extends BaseDataSource {
+public class UdpDataSource extends BaseDataSource {
+
+  /** The default datagram packet size, in bytes.
+   * 1500 bytes (MTU) minus IP header (20 bytes) and UDP header (8 bytes)
+   */
+  public static final int DEFAULT_PACKET_SIZE = 1480;
+
+  /** The maximum datagram packet size, in bytes.
+   * 65535 bytes minus IP header (20 bytes) and UDP header (8 bytes)
+   */
+  public static final int MAX_PACKET_SIZE = 65507;
 
   /** Thrown when an error is encountered when trying to read from a {@link UdpDataSource}. */
   public static final class UdpDataSourceException extends IOException {
@@ -45,6 +56,10 @@ public final class UdpDataSource extends BaseDataSource {
   /** The default socket timeout, in milliseconds. */
   public static final int DEFAULT_SOCKET_TIMEOUT_MILLIS = 8 * 1000;
 
+  /** The default maximum receive buffer size, in bytes. */
+  public static final int DEFAULT_RECEIVE_BUFFER_SIZE = 200 * 1024;
+
+
   public static final int UDP_PORT_UNSET = -1;
 
   private final int socketTimeoutMillis;
@@ -52,7 +67,7 @@ public final class UdpDataSource extends BaseDataSource {
   private final DatagramPacket packet;
 
   @Nullable private Uri uri;
-  @Nullable private DatagramSocket socket;
+  @Nullable protected DatagramSocket socket;
   @Nullable private MulticastSocket multicastSocket;
   @Nullable private InetAddress address;
   @Nullable private InetSocketAddress socketAddress;

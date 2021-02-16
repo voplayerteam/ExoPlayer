@@ -278,8 +278,8 @@ import java.util.concurrent.atomic.AtomicBoolean;
         .sendToTarget();
   }
 
-  public void prepare() {
-    handler.obtainMessage(MSG_PREPARE).sendToTarget();
+  public void prepare(ExoPlayer player) {
+    handler.obtainMessage(MSG_PREPARE, player).sendToTarget();
   }
 
   public void setPlayWhenReady(
@@ -458,7 +458,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
     try {
       switch (msg.what) {
         case MSG_PREPARE:
-          prepareInternal();
+          prepareInternal((ExoPlayer)msg.obj);
           break;
         case MSG_SET_PLAY_WHEN_READY:
           setPlayWhenReadyInternal(
@@ -650,7 +650,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
     }
   }
 
-  private void prepareInternal() {
+  private void prepareInternal(ExoPlayer player) {
     playbackInfoUpdate.incrementPendingOperationAcks(/* operationAcks= */ 1);
     resetInternal(
         /* resetRenderers= */ false,
@@ -659,7 +659,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
         /* resetError= */ true);
     loadControl.onPrepared();
     setState(playbackInfo.timeline.isEmpty() ? Player.STATE_ENDED : Player.STATE_BUFFERING);
-    mediaSourceList.prepare(bandwidthMeter.getTransferListener());
+    mediaSourceList.prepare(bandwidthMeter.getTransferListener(), player);
     handler.sendEmptyMessage(MSG_DO_SOME_WORK);
   }
 

@@ -233,7 +233,8 @@ public final class DataSpec {
         FLAG_ALLOW_GZIP,
         FLAG_DONT_CACHE_IF_LENGTH_UNKNOWN,
         FLAG_ALLOW_CACHE_FRAGMENTATION,
-        FLAG_MIGHT_NOT_USE_FULL_NETWORK_SPEED
+        FLAG_MIGHT_NOT_USE_FULL_NETWORK_SPEED,
+        FLAG_FORCE_BOUND_LOCAL_ADDRESS
       })
   public @interface Flags {}
   /**
@@ -262,6 +263,11 @@ public final class DataSpec {
    * full network speed (e.g. server throttling or unfinished live media chunks).
    */
   public static final int FLAG_MIGHT_NOT_USE_FULL_NETWORK_SPEED = 1 << 3;
+
+  /**
+   * Force the source to bound to local address.
+   */
+  public static final int FLAG_FORCE_BOUND_LOCAL_ADDRESS = 1 << 8; // 16
 
   /**
    * HTTP methods supported by ExoPlayer {@link HttpDataSource}s. One of {@link #HTTP_METHOD_GET},

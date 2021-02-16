@@ -48,6 +48,25 @@ public interface MediaSourceEventListener {
       LoadEventInfo loadEventInfo,
       MediaLoadData mediaLoadData) {}
 
+
+
+  /**
+   * Called when a media period is created by the media source.
+   *
+   * @param windowIndex The window index in the timeline this media period belongs to.
+   * @param mediaPeriodId The {@link MediaPeriodId} of the created media period.
+   */
+  void onMediaPeriodCreated(int windowIndex, MediaPeriodId mediaPeriodId);
+
+
+  /**
+   * Called when a media period is released by the media source.
+   *
+   * @param windowIndex The window index in the timeline this media period belongs to.
+   * @param mediaPeriodId The {@link MediaPeriodId} of the released media period.
+   */
+  void onMediaPeriodReleased(int windowIndex, MediaPeriodId mediaPeriodId);
+
   /**
    * Called when a load ends.
    *
@@ -168,6 +187,28 @@ public interface MediaSourceEventListener {
       this.windowIndex = windowIndex;
       this.mediaPeriodId = mediaPeriodId;
       this.mediaTimeOffsetMs = mediaTimeOffsetMs;
+    }
+
+    /** Dispatches {@link #onMediaPeriodCreated(int, MediaPeriodId)}. */
+    public void mediaPeriodCreated() {
+      MediaPeriodId mediaPeriodId = Assertions.checkNotNull(this.mediaPeriodId);
+      for (ListenerAndHandler listenerAndHandler : listenerAndHandlers) {
+        final MediaSourceEventListener listener = listenerAndHandler.listener;
+        postOrRun(
+            listenerAndHandler.handler,
+            () -> listener.onMediaPeriodCreated(windowIndex, mediaPeriodId));
+      }
+    }
+
+    /** Dispatches {@link #onMediaPeriodReleased(int, MediaPeriodId)}. */
+    public void mediaPeriodReleased() {
+      MediaPeriodId mediaPeriodId = Assertions.checkNotNull(this.mediaPeriodId);
+      for (ListenerAndHandler listenerAndHandler : listenerAndHandlers) {
+        final MediaSourceEventListener listener = listenerAndHandler.listener;
+        postOrRun(
+            listenerAndHandler.handler,
+            () -> listener.onMediaPeriodReleased(windowIndex, mediaPeriodId));
+      }
     }
 
     /**

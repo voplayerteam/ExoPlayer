@@ -1265,7 +1265,7 @@ public class SimpleExoPlayer extends BasePlayer
     int playerCommand = audioFocusManager.updateAudioFocus(playWhenReady, Player.STATE_BUFFERING);
     updatePlayWhenReady(
         playWhenReady, playerCommand, getPlayWhenReadyChangeReason(playWhenReady, playerCommand));
-    player.prepare();
+    player.prepare(this);
   }
 
   /**

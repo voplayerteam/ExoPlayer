@@ -115,7 +115,7 @@ public abstract class CompositeMediaSource<T> extends BaseMediaSource {
     childSources.put(id, new MediaSourceAndListener(mediaSource, caller, eventListener));
     mediaSource.addEventListener(Assertions.checkNotNull(eventHandler), eventListener);
     mediaSource.addDrmEventListener(Assertions.checkNotNull(eventHandler), eventListener);
-    mediaSource.prepareSource(caller, mediaTransferListener);
+    mediaSource.prepareSource(caller, mediaTransferListener, getPlayer());
     if (!isEnabled()) {
       mediaSource.disable(caller);
     }
@@ -231,6 +231,16 @@ public abstract class CompositeMediaSource<T> extends BaseMediaSource {
         mediaSourceEventDispatcher.loadStarted(
             loadEventData, maybeUpdateMediaLoadData(mediaLoadData));
       }
+    }
+
+    @Override
+    public void onMediaPeriodCreated(int windowIndex, MediaPeriodId mediaPeriodId) {
+
+    }
+
+    @Override
+    public void onMediaPeriodReleased(int windowIndex, MediaPeriodId mediaPeriodId) {
+
     }
 
     @Override

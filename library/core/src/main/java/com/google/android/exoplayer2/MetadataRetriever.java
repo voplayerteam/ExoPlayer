@@ -140,7 +140,7 @@ public final class MetadataRetriever {
           case MESSAGE_PREPARE_SOURCE:
             MediaItem mediaItem = (MediaItem) msg.obj;
             mediaSource = mediaSourceFactory.createMediaSource(mediaItem);
-            mediaSource.prepareSource(mediaSourceCaller, /* mediaTransferListener= */ null);
+            mediaSource.prepareSource(mediaSourceCaller, /* mediaTransferListener= */ null, null);
             mediaSourceHandler.sendEmptyMessage(MESSAGE_CHECK_FOR_FAILURE);
             return true;
           case MESSAGE_CHECK_FOR_FAILURE:

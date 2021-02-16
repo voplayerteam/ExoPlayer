@@ -491,6 +491,16 @@ public class AnalyticsCollector
   }
 
   @Override
+  public void onMediaPeriodCreated(int windowIndex, MediaPeriodId mediaPeriodId) {
+
+  }
+
+  @Override
+  public void onMediaPeriodReleased(int windowIndex, MediaPeriodId mediaPeriodId) {
+
+  }
+
+  @Override
   public final void onLoadCompleted(
       int windowIndex,
       @Nullable MediaPeriodId mediaPeriodId,

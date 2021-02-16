@@ -155,7 +155,7 @@ import java.util.Set;
         mediaSourceHolders.add(insertionIndex, holder);
         mediaSourceByUid.put(holder.uid, holder);
         if (isPrepared) {
-          prepareChildSource(holder);
+          prepareChildSource(holder, null);
           if (mediaSourceByMediaPeriod.isEmpty()) {
             enabledMediaSourceHolders.add(holder);
           } else {
@@ -279,12 +279,12 @@ import java.util.Set;
   }
 
   /** Prepares the playlist. */
-  public void prepare(@Nullable TransferListener mediaTransferListener) {
+  public void prepare(@Nullable TransferListener mediaTransferListener, ExoPlayer player) {
     Assertions.checkState(!isPrepared);
     this.mediaTransferListener = mediaTransferListener;
     for (int i = 0; i < mediaSourceHolders.size(); i++) {
       MediaSourceHolder mediaSourceHolder = mediaSourceHolders.get(i);
-      prepareChildSource(mediaSourceHolder);
+      prepareChildSource(mediaSourceHolder, player);
       enabledMediaSourceHolders.add(mediaSourceHolder);
     }
     isPrepared = true;
@@ -430,7 +430,7 @@ import java.util.Set;
     return windowIndex + mediaSourceHolder.firstWindowIndexInChild;
   }
 
-  private void prepareChildSource(MediaSourceHolder holder) {
+  private void prepareChildSource(MediaSourceHolder holder, ExoPlayer player) {
     MediaSource mediaSource = holder.mediaSource;
     MediaSource.MediaSourceCaller caller =
         (source, timeline) -> mediaSourceListInfoListener.onPlaylistUpdateRequested();
@@ -438,7 +438,7 @@ import java.util.Set;
     childSources.put(holder, new MediaSourceAndListener(mediaSource, caller, eventListener));
     mediaSource.addEventListener(Util.createHandlerForCurrentOrMainLooper(), eventListener);
     mediaSource.addDrmEventListener(Util.createHandlerForCurrentOrMainLooper(), eventListener);
-    mediaSource.prepareSource(caller, mediaTransferListener);
+    mediaSource.prepareSource(caller, mediaTransferListener, player);
   }
 
   private void maybeReleaseChildSource(MediaSourceHolder mediaSourceHolder) {
@@ -539,6 +539,16 @@ import java.util.Set;
       if (maybeUpdateEventDispatcher(windowIndex, mediaPeriodId)) {
         mediaSourceEventDispatcher.loadStarted(loadEventData, mediaLoadData);
       }
+    }
+
+    @Override
+    public void onMediaPeriodCreated(int windowIndex, MediaSource.MediaPeriodId mediaPeriodId) {
+
+    }
+
+    @Override
+    public void onMediaPeriodReleased(int windowIndex, MediaSource.MediaPeriodId mediaPeriodId) {
+
     }
 
     @Override

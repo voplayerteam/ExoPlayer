@@ -25,6 +25,9 @@ include modulePrefix + 'library'
 include modulePrefix + 'library-common'
 include modulePrefix + 'library-core'
 include modulePrefix + 'library-dash'
+include modulePrefix + 'library-rtp'
+include modulePrefix + 'library-rtsp'
+include modulePrefix + 'library-sdp'
 include modulePrefix + 'library-extractor'
 include modulePrefix + 'library-hls'
 include modulePrefix + 'library-smoothstreaming'
@@ -54,6 +57,9 @@ project(modulePrefix + 'library').projectDir = new File(rootDir, 'library/all')
 project(modulePrefix + 'library-common').projectDir = new File(rootDir, 'library/common')
 project(modulePrefix + 'library-core').projectDir = new File(rootDir, 'library/core')
 project(modulePrefix + 'library-dash').projectDir = new File(rootDir, 'library/dash')
+project(modulePrefix + 'library-rtp').projectDir = new File(rootDir, 'library/rtp')
+project(modulePrefix + 'library-rtsp').projectDir = new File(rootDir, 'library/rtsp')
+project(modulePrefix + 'library-sdp').projectDir = new File(rootDir, 'library/sdp')
 project(modulePrefix + 'library-extractor').projectDir = new File(rootDir, 'library/extractor')
 project(modulePrefix + 'library-hls').projectDir = new File(rootDir, 'library/hls')
 project(modulePrefix + 'library-smoothstreaming').projectDir = new File(rootDir, 'library/smoothstreaming')

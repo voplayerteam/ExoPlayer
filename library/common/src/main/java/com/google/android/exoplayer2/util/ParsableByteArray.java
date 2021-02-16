@@ -27,7 +27,7 @@ import java.util.Arrays;
  */
 public final class ParsableByteArray {
 
-  private byte[] data;
+  public byte[] data;
   private int position;
   // TODO(internal b/147657250): Enforce this limit on all read methods.
   private int limit;

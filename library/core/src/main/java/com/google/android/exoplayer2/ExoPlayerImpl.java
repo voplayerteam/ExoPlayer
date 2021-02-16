@@ -317,6 +317,10 @@ import java.util.List;
 
   @Override
   public void prepare() {
+    prepare(this);
+  }
+
+  public void prepare(ExoPlayer player) {
     if (playbackInfo.playbackState != Player.STATE_IDLE) {
       return;
     }
@@ -329,7 +333,7 @@ import java.util.List;
     // player after this prepare. The internal player can't change the playback info immediately
     // because it uses a callback.
     pendingOperationAcks++;
-    internalPlayer.prepare();
+    internalPlayer.prepare(player);
     updatePlaybackInfo(
         playbackInfo,
         /* positionDiscontinuity= */ false,

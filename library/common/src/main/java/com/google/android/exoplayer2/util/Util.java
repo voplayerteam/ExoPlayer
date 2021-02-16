@@ -1825,6 +1825,9 @@ public final class Util {
   @ContentType
   public static int inferContentType(Uri uri) {
     @Nullable String path = uri.getPath();
+    if (uri.getScheme().equalsIgnoreCase("rtsp")) {
+      return C.TYPE_RTSP;
+    }
     return path == null ? C.TYPE_OTHER : inferContentType(path);
   }
 

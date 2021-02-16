@@ -17,6 +17,7 @@ package com.google.android.exoplayer2.source;
 
 import android.os.Handler;
 import androidx.annotation.Nullable;
+import com.google.android.exoplayer2.ExoPlayer;
 import com.google.android.exoplayer2.MediaItem;
 import com.google.android.exoplayer2.Timeline;
 import com.google.android.exoplayer2.drm.DrmSessionEventListener;
@@ -110,6 +111,16 @@ public interface MediaSource {
   }
 
   /**
+   * Returns whether the media source is on TCP.
+   */
+  boolean isTcp();
+
+  /**
+   * Returns whether the media source is a live.
+   */
+  boolean isLive();
+
+  /**
    * Adds a {@link MediaSourceEventListener} to the list of listeners which are notified of media
    * source events.
    *
@@ -199,9 +210,9 @@ public interface MediaSource {
    *     transfers. May be null if no listener is available. Note that this listener should be only
    *     informed of transfers related to the media loads and not of auxiliary loads for manifests
    *     and other data.
+   * @param player
    */
-  void prepareSource(MediaSourceCaller caller, @Nullable TransferListener mediaTransferListener);
-
+  void prepareSource(MediaSourceCaller caller, @Nullable TransferListener mediaTransferListener, ExoPlayer player);
   /**
    * Throws any pending error encountered while loading or refreshing source information.
    *
